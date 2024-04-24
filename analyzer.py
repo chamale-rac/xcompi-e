@@ -7,7 +7,9 @@ from src._dir_dfa import DirectDeterministicFiniteAutomaton as DFA
 from src._tokenizer import Tokenizer
 
 
-def main():
+def analyze():
+    symbolTable = []
+
     parser = argparse.ArgumentParser(description="Lexer Analyzer")
     parser.add_argument('read_file_path', type=str,
                         help='The .txt to tokenize')  # Read from file
@@ -55,6 +57,7 @@ def main():
             print(Fore.GREEN + '✔ Match found!' + Style.RESET_ALL)
             print(f'[{forward}:{forward+idx}]', match,
                   '->', unCodified[forward:forward + idx])
+            symbolTable.append((match, unCodified[forward:forward + idx]))
             print(Fore.YELLOW +
                   'Executing the attached python code...' + Style.RESET_ALL)
             # Remove first and last character
@@ -67,10 +70,16 @@ def main():
             except Exception as e:
                 print(Fore.RED + 'On running return, found error:',
                       e, Style.RESET_ALL)
+
             forward += idx
             print(Fore.RED + '-'*31)
             print('-'*31 + Style.RESET_ALL)
     print('Analysis finished!')
+    return symbolTable
+
+
+def main():
+    analyze()
 
 
 if __name__ == "__main__":

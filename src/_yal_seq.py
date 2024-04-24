@@ -1,8 +1,7 @@
 from src._tokenizer import Tokenizer
 from src.utils.patterns import Pattern
-from src.utils.constants import MATCH, EXIST, IDENT, VALUE, EXTRACT_REMINDER
+from src.utils.constants import MATCH, EXIST, IDENT, VALUE, EXTRACT_REMINDER, SPECIAL
 from src.utils.structures.symbol import Symbol
-from src.utils.patterns import CHAR
 from src.utils.tools import errorsManager
 
 
@@ -25,6 +24,7 @@ class YalSequencer(object):
             EXIST: self.exist,
             IDENT: self.ident,
             VALUE: self.value,
+            SPECIAL: self.special,
             EXTRACT_REMINDER: None
         }
         self.idents: dict = {}
@@ -146,3 +146,9 @@ class YalSequencer(object):
             return False
 
         return True
+
+    def special(self, symbolsPointer: int, sequencePointer: int) -> bool:
+        symbol: Symbol = self.lexer.symbolsTable[symbolsPointer]
+        if symbol.original == 'rule':
+            return True
+        return False

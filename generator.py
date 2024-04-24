@@ -4,7 +4,7 @@ import argparse
 from src._tokenizer import Tokenizer
 from src.utils.tools import readFile, str2bool, str2file, save_to_pickle
 from src.utils.patterns import ID, WS, EQ, EXPR, COMMENT, RETURN, LET, OPERATOR, GROUP, RULE, CHAR
-from src.utils.constants import IDENT, VALUE, MATCH, EXIST, EXTRACT_REMINDER, OR, CONCAT
+from src.utils.constants import IDENT, VALUE, MATCH, EXIST, EXTRACT_REMINDER, OR, CONCAT, SPECIAL
 from src._yal_seq import YalSequencer as YalSeq
 from src._expression import Expression
 from src._ast import AbstractSyntaxTree as AST
@@ -104,7 +104,7 @@ def main():
     yal_rule = YalSeq(
         lexer,
         [
-            [RULE, MATCH],
+            [RULE, SPECIAL],
             [WS, EXIST],
             [ID, IDENT],
             [WS, EXIST],
@@ -218,9 +218,9 @@ def main():
 
     print('-' * 10, 'IMPORTANT', '-' * 10)
     save_as = save_to_pickle(final_dir_dfa, directory=dir_name,
-                             file_name='analyzer', structure_name='Final DIR DFA')
+                             file_name='YALEX_ANALYZER', structure_name='Final DIR DFA')
 
-    save_as = generate_script(save_as, f'output/{dir_name}/ANALYZER.py')
+    save_as = generate_script(save_as, f'output/{dir_name}/YALEX_ANALYZER.py')
 
     print(f'✔ Analyzer Script has been generated successfully to {save_as}')
 
