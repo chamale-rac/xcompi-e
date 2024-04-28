@@ -1,5 +1,6 @@
 import argparse
 import src.YAPAL_TOKENIZER as tokenizer
+from src._yapal_seq import YapalSequencer as yapal_seq
 
 
 def main():
@@ -17,8 +18,12 @@ def main():
     print(f"Syntax file: {args.yapl_file}")
     print(f"Input file: {args.input_file}")
 
-    symbolsTable = tokenizer.analyze(args.yapl_file, False)
-    print(symbolsTable)
+    yapal_tokens = tokenizer.analyze(args.yapl_file, False)
+
+    ypsq = yapal_seq(yapal_tokens)
+
+    print(f"Defined tokens: {ypsq.get_defined_tokens()}")
+    print(f"Ignored tokens: {ypsq.get_ignored_tokens()}")
 
 
 if __name__ == "__main__":

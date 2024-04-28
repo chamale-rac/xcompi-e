@@ -19,6 +19,7 @@ term:
     term TIMES factor
   | factor
 ;
+
 factor:
     LPAREN expression RPAREN
   | ID
