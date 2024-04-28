@@ -24,6 +24,11 @@ def main():
 
     print(f"Defined tokens: {ypsq.get_defined_tokens()}")
     print(f"Ignored tokens: {ypsq.get_ignored_tokens()}")
+    print(f"Terminals: {ypsq.get_terminals()}")
+    print(f"Non terminals: {ypsq.get_non_terminals()}")
+    print(f"Productions:")
+    for production in ypsq.get_defined_productions():
+        print(f"  {production}")
 
 
 if __name__ == "__main__":

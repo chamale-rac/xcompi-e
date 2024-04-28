@@ -1,3 +1,6 @@
+from re import T
+
+
 class YapalSequencer(object):
     """
     This class represents the YAPAL sequencer, which processes a list of tokens representing
@@ -16,6 +19,7 @@ class YapalSequencer(object):
         if self.splitBySpt():
             self.removeAnyCm()
             self.extractDefinitions()
+            self.extractProductions()
 
     def splitBySpt(self):
         try:
@@ -76,3 +80,61 @@ class YapalSequencer(object):
         This function returns the ignore tokens.
         """
         return self.ignore_tokens
+
+    def extractProductions(self):
+        """
+        This function extracts the productions from the tokens.
+        """
+        self.terminals = set()
+        self.non_terminals = set()
+        self.defined_productions = []
+
+        name = None
+        has_name = False
+        this_production = []
+        this_productions = []
+        this_terminals = []
+
+        while self.productions:
+            # Extract the production
+            production = self.productions.pop(0)
+
+            if production[0] == 'minus' and has_name is not True:
+                name = production[1]
+            elif production[0] == 'stat':  # :
+                has_name = True
+            elif has_name and production[0] in ['mayus', 'minus']:
+                this_production.append(production[1])
+                this_terminals.append(production[1])
+            elif has_name and production[0] == 'rpt':  # |
+                this_productions.append(this_production)
+                this_production = []
+            elif has_name and production[0] == 'end':  # ;
+                this_productions.append(this_production)
+                has_name = False
+                self.non_terminals.add(name)
+                self.terminals.update(this_terminals)
+                this_production = []
+
+                for production in this_productions:
+                    self.defined_productions.append((name, tuple(production)))
+
+                this_productions = []
+
+    def get_terminals(self):
+        """
+        This function returns the terminals.
+        """
+        return self.terminals
+
+    def get_non_terminals(self):
+        """
+        This function returns the non-terminals.
+        """
+        return self.non_terminals
+
+    def get_defined_productions(self):
+        """
+        This function returns the defined productions.
+        """
+        return self.defined_productions
