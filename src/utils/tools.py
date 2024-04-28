@@ -112,7 +112,7 @@ def str2dir(v):
 
 
 def save_to_pickle(structure, directory, file_name, structure_name='structure'):
-    save_as = f'output/{directory}/{file_name}.pkl'
+    save_as = f'{directory}/{file_name}.pkl'
 
     # Create the directory if it does not exist
     os.makedirs(os.path.dirname(save_as), exist_ok=True)

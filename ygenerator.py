@@ -17,8 +17,8 @@ def main():
     parser = argparse.ArgumentParser(description="Lexer Analyzers Generator")
     parser.add_argument('yal_path', type=str2file,
                         help='The .yal file path')  # Yal file path
-    parser.add_argument('sub_dir_output_path', type=str,
-                        help='The directory name inside (.\output) to save the results')  # Save to directory
+    parser.add_argument('output_path', type=str,
+                        help='The directory name to save the results')  # Save to directory
     parser.add_argument('draw_subtrees', type=str2bool,
                         help='A boolean flag to draw the subtrees or not.')  # Draw subtrees
 
@@ -31,7 +31,7 @@ def main():
     args = parser.parse_args()
 
     file_path = args.yal_path
-    dir_name = args.sub_dir_output_path
+    dir_name = args.output_path
     draw_subtrees = args.draw_subtrees
     draw_tree = args.draw_tree
     draw_automatons = args.draw_automatons
@@ -220,7 +220,8 @@ def main():
     save_as = save_to_pickle(final_dir_dfa, directory=dir_name,
                              file_name='YALEX_ANALYZER', structure_name='Final DIR DFA')
 
-    save_as = generate_script(save_as, f'output/{dir_name}/YALEX_ANALYZER.py')
+    save_as = generate_script(save_as,
+                              f'{dir_name}/YALEX_ANALYZER.py')
 
     print(f'✔ Analyzer Script has been generated successfully to {save_as}')
 

@@ -72,7 +72,7 @@ class Automaton(object):
         for state in self.acceptanceStates:
             dot.node(str(state.id), str(state.value), shape='doublecircle')
 
-        dot.render(f'output/{id}/{name}', format='png', cleanup=True)
+        dot.render(f'{id}/{name}', format='png', cleanup=True)
 
     def simulate(self, input: list):
         '''
