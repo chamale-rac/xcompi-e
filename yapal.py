@@ -1,6 +1,7 @@
 import argparse
 import src.YAPAL_TOKENIZER as tokenizer
 from src._yapal_seq import YapalSequencer as yapal_seq
+from src.grammar import Grammar
 
 
 def main():
@@ -27,8 +28,18 @@ def main():
     print(f"Terminals: {ypsq.get_terminals()}")
     print(f"Non terminals: {ypsq.get_non_terminals()}")
     print(f"Productions:")
-    for production in ypsq.get_defined_productions():
-        print(f"  {production}")
+
+    grammar = Grammar(ypsq.get_defined_productions())
+    print(grammar)
+
+    # Let's use an example set of items to compute its closure
+    # Starting item with the dot at the beginning
+    example_items = {("expression'", ('expression',), 0)}
+
+    # Compute the closure of the example set of items
+    kernel_items, non_kernel_items = grammar.closure(example_items)
+    print(kernel_items)
+    print(non_kernel_items)
 
 
 if __name__ == "__main__":
