@@ -37,9 +37,18 @@ def main():
     example_items = {("expression'", ('expression',), 0)}
 
     # Compute the closure of the example set of items
-    kernel_items, non_kernel_items = grammar.closure(example_items)
-    print(kernel_items)
-    print(non_kernel_items)
+    closure_set = grammar.closure(example_items)
+    print(closure_set)
+
+    example_items = {
+        ("expression'", ('expression',), 1),
+        ("expression", ('expression', 'PLUS',
+                        'term'), 1)
+    }
+    symbol_X = 'PLUS'
+
+    goto_results = grammar.goto(example_items, symbol_X)
+    print(goto_results)
 
 
 if __name__ == "__main__":

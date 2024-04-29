@@ -41,9 +41,21 @@ class Grammar(object):
             # Add the new items to the closure set and repeat
             closure_set.update(new_items)
 
-        non_kernel_items = closure_set - kernel_items
+        # non_kernel_items = closure_set - kernel_items
 
-        return kernel_items, non_kernel_items
+        # return kernel_items, non_kernel_items
+        return closure_set
+
+    def goto(self, items, symbol) -> None:
+        goto_items = set()
+
+        for item in items:
+            head, body, dot_position = item
+            if dot_position < len(body) and body[dot_position] == symbol:
+                new_item = (head, body, dot_position + 1)
+                goto_items |= self.closure({new_item})
+
+        return goto_items
 
     def __str__(self) -> str:
         return "\n".join([str(production) for production in self.productions])
