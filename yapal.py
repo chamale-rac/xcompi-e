@@ -32,30 +32,34 @@ def main():
     grammar = Grammar(ypsq.get_defined_productions())
     print(grammar)
 
-    # Let's use an example set of items to compute its closure
-    # Starting item with the dot at the beginning
-    example_items = {("expression'", ('expression',), 0)}
+    # # Let's use an example set of items to compute its closure
+    # # Starting item with the dot at the beginning
+    # example_items = {("expression'", ('expression',), 0)}
 
-    # Compute the closure of the example set of items
-    closure_set = grammar.closure(example_items)
-    print(closure_set)
+    # # Compute the closure of the example set of items
+    # closure_set = grammar.closure(example_items)
+    # print(closure_set)
 
-    example_items = {
-        ("expression'", ('expression',), 1),
-        ("expression", ('expression', 'PLUS',
-                        'term'), 1)
-    }
-    symbol_X = 'PLUS'
+    # # example_items = {
+    # #     ("expression'", ('expression',), 1),
+    # #     ("expression", ('expression', 'PLUS',
+    # #                     'term'), 1)
+    # # }
+    # # symbol_X = 'PLUS'
 
-    goto_results = grammar.goto(example_items, symbol_X)
-    print(goto_results)
+    # # goto_results = grammar.goto(example_items, symbol_X)
+    # # print(goto_results)
 
     print('*'*80)
 
-    results = grammar.items(ypsq.get_terminals())
+    C, relations = grammar.items(ypsq.get_terminals())
 
-    for i, item in enumerate(results):
+    for i, item in enumerate(C):
         print(f"I{i}: {item}")
+
+    print('*'*80)
+    for i, relation in enumerate(relations):
+        print(f"R{i}: {relation}")
 
 
 if __name__ == "__main__":
