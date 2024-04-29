@@ -52,7 +52,7 @@ def main():
 
     print('*'*80)
 
-    C, relations = grammar.items(ypsq.get_terminals())
+    C, relations = grammar.items(ypsq.get_symbols())
 
     for i, item in enumerate(C):
         print(f"I{i}: {item}")
@@ -60,6 +60,9 @@ def main():
     print('*'*80)
     for i, relation in enumerate(relations):
         print(f"R{i}: {relation}")
+
+    print('*'*80)
+    grammar.draw(C, relations, "YAPAL")
 
 
 if __name__ == "__main__":

@@ -85,15 +85,14 @@ class YapalSequencer(object):
         """
         This function extracts the productions from the tokens.
         """
-        self.terminals = set()
-        self.non_terminals = set()
+        self.terminals = []
+        self.non_terminals = []
         self.defined_productions = []
 
         name = None
         has_name = False
         this_production = []
         this_productions = []
-        this_terminals = []
 
         while self.productions:
             # Extract the production
@@ -105,21 +104,26 @@ class YapalSequencer(object):
                 has_name = True
             elif has_name and production[0] in ['mayus', 'minus']:
                 this_production.append(production[1])
-                this_terminals.append(production[1])
+                self.terminals.append(production[1])
             elif has_name and production[0] == 'rpt':  # |
                 this_productions.append(this_production)
                 this_production = []
             elif has_name and production[0] == 'end':  # ;
                 this_productions.append(this_production)
                 has_name = False
-                self.non_terminals.add(name)
-                self.terminals.update(this_terminals)
+                self.non_terminals.append(name)
                 this_production = []
 
                 for production in this_productions:
                     self.defined_productions.append((name, tuple(production)))
 
                 this_productions = []
+
+        # Over terminal and non-terminal lists avoid repetitions but maintain order
+        self.terminals = list(dict.fromkeys(self.terminals))
+        self.non_terminals = list(dict.fromkeys(self.non_terminals))
+
+        self.symbols = self.terminals + self.non_terminals
 
     def get_terminals(self):
         """
@@ -138,3 +142,9 @@ class YapalSequencer(object):
         This function returns the defined productions.
         """
         return self.defined_productions
+
+    def get_symbols(self):
+        """
+        This function returns the symbols.
+        """
+        return self.symbols

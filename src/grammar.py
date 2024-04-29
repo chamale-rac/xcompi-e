@@ -1,9 +1,13 @@
+from graphviz import Digraph
+
+
 class Grammar(object):
     def __init__(self, productions) -> None:
         self.productions = productions
         self.start_symbol = productions[0][0]
         self.nonterminals = {prod[0] for prod in productions}
         self.augment()
+        self.relations = []
 
     def augment(self) -> None:
         new_start_symbol = f"{self.start_symbol}'"
@@ -71,27 +75,71 @@ class Grammar(object):
 
         return goto_items
 
-    def items(self, terminals):
-        C = [self.closure(
-            {(self.start_symbol, self.productions[0][1], 0, True)})]
+    def items(self, symbols):
         relations = []
 
-        symbols = list(self.nonterminals.union(set(terminals)))
+        C = [self.closure(
+            {(self.start_symbol, self.productions[0][1], 0, True)})]
+
+        # A dictionary to map sets in C to their indices
+        set_indices = {frozenset(C[0]): 0}
 
         while True:
             new_sets_added = False
-            for idx, I in enumerate(C):
+            for I_index, I in enumerate(C):
                 for X in symbols:
                     goto_set = self.goto(I, X)
-
-                    if goto_set and goto_set not in C:
-                        C.append(goto_set)
-                        relations.append((idx, len(C) - 1, X))
-                        new_sets_added = True
-            if new_sets_added:
+                    goto_frozenset = frozenset(goto_set)
+                    if goto_set:
+                        if goto_frozenset not in set_indices:
+                            C.append(goto_set)
+                            set_indices[goto_frozenset] = len(C) - 1
+                            new_sets_added = True
+                        # Regardless of whether it's new or existing, record the transition
+                        relations.append(
+                            (I_index, set_indices[goto_frozenset], X))
+            if not new_sets_added:
                 break
 
+        # Avoid duplicates in relations
+        relations = list(set(relations))
+
         return C, relations
+
+    def items_to_str(self, items):
+        def item_to_str(item):
+            before_dot = ' '.join(item[1][:item[2]])
+            after_dot = ' '.join(item[1][item[2]:])
+            return f"{item[0]} → {before_dot} • {after_dot}"
+
+        kernel_items_str = '\\l'.join(item_to_str(item)
+                                      for item in items if item[3])
+        non_kernel_items_str = '\\l'.join(
+            item_to_str(item) for item in items if not item[3])
+
+        combined_str = f"{kernel_items_str} | {non_kernel_items_str}" if non_kernel_items_str else kernel_items_str
+        return f'{combined_str}'
+
+    def draw(self, C, relations, label: str = None):
+        G = Digraph(
+            graph_attr={'rankdir': 'TB'},
+            node_attr={'shape': 'record'}
+        )
+
+        G.attr(label=label)
+
+        for idx, I in enumerate(C):
+            node_label = self.items_to_str(I)
+            G.node(f"I{idx}", label=f"{{ I{idx} | {node_label} }}")
+
+        for idx, relation in enumerate(relations):
+            i, j, X = relation
+            G.edge(f"I{i}", f"I{j}", label=" " + X + " ")
+
+        try:
+            G.render('LRautomaton', format='png', cleanup=True)
+        except Exception as e:
+            print(e)
 
     def __str__(self) -> str:
         return "\n".join([str(production) for production in self.productions])
