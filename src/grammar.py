@@ -57,5 +57,24 @@ class Grammar(object):
 
         return goto_items
 
+    def items(self, terminals):
+        C = [self.closure({(self.start_symbol, self.productions[0][1], 0)})]
+
+        symbols = list(self.nonterminals.union(set(terminals)))
+
+        while True:
+            new_sets_added = False
+            for I in C:
+                for X in symbols:
+                    goto_set = self.goto(I, X)
+
+                    if goto_set and goto_set not in C:
+                        C.append(goto_set)
+                        new_sets_added = True
+            if new_sets_added:
+                break
+
+        return C
+
     def __str__(self) -> str:
         return "\n".join([str(production) for production in self.productions])

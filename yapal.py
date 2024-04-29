@@ -50,6 +50,13 @@ def main():
     goto_results = grammar.goto(example_items, symbol_X)
     print(goto_results)
 
+    print('*'*80)
+
+    results = grammar.items(ypsq.get_terminals())
+
+    for i, item in enumerate(results):
+        print(f"I{i}: {item}")
+
 
 if __name__ == "__main__":
     main()
