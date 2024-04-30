@@ -148,3 +148,24 @@ class YapalSequencer(object):
         This function returns the symbols.
         """
         return self.symbols
+
+    def compare_tokens(self, tokens):
+        """
+        This function compares the tokens.
+        """
+
+        """
+        Check that the defined tokens exist in the tokens
+        If the token is in ignore_tokens, it is not necessary to check
+        """
+        mayus_tokens = []
+        for token in tokens:
+            # Convert token to uppercase
+            mayus_tokens.append(token.upper())
+
+        for token in self.defined_tokens:
+            if token not in self.ignore_tokens:
+                if token not in mayus_tokens:
+                    return False
+
+        return True

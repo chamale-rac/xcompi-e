@@ -4,7 +4,7 @@ import argparse
 from src._tokenizer import Tokenizer
 from src.utils.tools import readFile, str2bool, str2file, save_to_pickle
 from src.utils.patterns import ID, WS, EQ, EXPR, COMMENT, RETURN, LET, OPERATOR, GROUP, RULE, CHAR
-from src.utils.constants import IDENT, VALUE, MATCH, EXIST, EXTRACT_REMINDER, OR, CONCAT, SPECIAL
+from src.utils.constants import IDENT, VALUE, MATCH, EXIST, EXTRACT_REMINDER, OR, CONCAT, SPECIAL, SPECIAL2
 from src._yal_seq import YalSequencer as YalSeq
 from src._expression import Expression
 from src._ast import AbstractSyntaxTree as AST
@@ -13,28 +13,7 @@ from src._dir_dfa import DirectDeterministicFiniteAutomaton as DirDFA
 from src.analyzer_serializer import generate_script
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Lexer Analyzers Generator")
-    parser.add_argument('yal_path', type=str2file,
-                        help='The .yal file path')  # Yal file path
-    parser.add_argument('output_path', type=str,
-                        help='The directory name to save the results')  # Save to directory
-    parser.add_argument('draw_subtrees', type=str2bool,
-                        help='A boolean flag to draw the subtrees or not.')  # Draw subtrees
-
-    parser.add_argument('draw_tree', type=str2bool,
-                        help='A boolean flag to draw the tree or not.')  # Draw tree
-
-    parser.add_argument('draw_automatons', type=str2bool,
-                        help='A boolean flag to draw the automatons or not.')  # Draw automatons
-
-    args = parser.parse_args()
-
-    file_path = args.yal_path
-    dir_name = args.output_path
-    draw_subtrees = args.draw_subtrees
-    draw_tree = args.draw_tree
-    draw_automatons = args.draw_automatons
+def yalex(file_path: str, dir_name: str, draw_subtrees: bool, draw_tree: bool, draw_automatons: bool):
 
     fileContent = readFile(file_path)
     print(f'✔ File read successfully from {file_path}')
@@ -63,7 +42,7 @@ def main():
     yal_let = YalSeq(
         lexer,
         [
-            [LET, MATCH],
+            [LET, SPECIAL2],
             [WS, EXIST],
             [ID, IDENT],
             [WS, EXIST],
@@ -229,7 +208,32 @@ def main():
 
     print('✔ All Done!')
 
+    return final_dir_dfa
+
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Lexer Analyzers Generator")
+    parser.add_argument('yal_path', type=str2file,
+                        help='The .yal file path')  # Yal file path
+    parser.add_argument('output_path', type=str,
+                        help='The directory name to save the results')  # Save to directory
+    parser.add_argument('draw_subtrees', type=str2bool,
+                        help='A boolean flag to draw the subtrees or not.')  # Draw subtrees
+
+    parser.add_argument('draw_tree', type=str2bool,
+                        help='A boolean flag to draw the tree or not.')  # Draw tree
+
+    parser.add_argument('draw_automatons', type=str2bool,
+                        help='A boolean flag to draw the automatons or not.')  # Draw automatons
+
+    args = parser.parse_args()
+
+    file_path = args.yal_path
+    dir_name = args.output_path
+    draw_subtrees = args.draw_subtrees
+    draw_tree = args.draw_tree
+    draw_automatons = args.draw_automatons
+
+    yalex(file_path, dir_name, draw_subtrees, draw_tree, draw_automatons)
+
     print('Exiting...')
