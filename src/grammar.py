@@ -90,6 +90,7 @@ class Grammar(object):
                 for X in symbols:
                     goto_set = self.goto(I, X)
                     goto_frozenset = frozenset(goto_set)
+
                     if goto_set:
                         if goto_frozenset not in set_indices:
                             C.append(goto_set)
@@ -98,6 +99,13 @@ class Grammar(object):
                         # Regardless of whether it's new or existing, record the transition
                         relations.append(
                             (I_index, set_indices[goto_frozenset], X))
+
+                        for item in goto_set:
+                            # Check have start symbol in the head and dot is at the end of the production
+                            if item[0] == self.start_symbol and item[2] == len(item[1]):
+                                relations.append(
+                                    (set_indices[goto_frozenset], 'accept', ''))
+                                continue
             if not new_sets_added:
                 break
 
