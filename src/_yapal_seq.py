@@ -104,7 +104,8 @@ class YapalSequencer(object):
                 has_name = True
             elif has_name and production[0] in ['mayus', 'minus']:
                 this_production.append(production[1])
-                self.terminals.append(production[1])
+                if production[0] == 'mayus':
+                    self.terminals.append(production[1])
             elif has_name and production[0] == 'rpt':  # |
                 this_productions.append(this_production)
                 this_production = []

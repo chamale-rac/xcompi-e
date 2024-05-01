@@ -70,7 +70,7 @@ def main():
     for i, relation in enumerate(relations):
         print(f"R{i}: {relation}")
 
-    grammar.draw(C, relations, "YAPAL")
+    grammar.draw(C, relations, "LRAutomaton")
 
 
 if __name__ == "__main__":
