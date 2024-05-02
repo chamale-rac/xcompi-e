@@ -2,7 +2,7 @@ import argparse
 import src.YAPAL_TOKENIZER as tokenizer
 from src._yapal_seq import YapalSequencer as yapal_seq
 from src.grammar import Grammar
-from ygenerator import yalex
+from yalex import yalex
 
 
 def main():

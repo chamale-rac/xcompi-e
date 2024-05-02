@@ -2,7 +2,7 @@ import argparse
 
 
 from src._tokenizer import Tokenizer
-from src.utils.tools import readFile, str2bool, str2file, save_to_pickle
+from src.utils.tools import readFile, str2bool, str2file, save_to_pickle, numberToLetter
 from src.utils.patterns import ID, WS, EQ, EXPR, COMMENT, RETURN, LET, OPERATOR, GROUP, RULE, CHAR
 from src.utils.constants import IDENT, VALUE, MATCH, EXIST, EXTRACT_REMINDER, OR, CONCAT, SPECIAL, SPECIAL2
 from src._yal_seq import YalSequencer as YalSeq
@@ -127,9 +127,18 @@ def yalex(file_path: str, dir_name: str, draw_subtrees: bool, draw_tree: bool, d
     alphabet: set[str] = set()
     last_symbol = None
 
+    namingSpecialCases = {
+        "'+'": 'PLUS',
+        "'*'": 'TIMES',
+        "'('": 'LPAREN',
+        "')'": 'RPAREN',
+        "'-'": 'MINUS',
+    }
+
     returnDict = {}
     idCounter = 0
     returnCounter = 0
+    specialNamingCounter = 1
     for symbol in rule_lexer.symbolsTable:
         # print(f'Processing symbol: {symbol}')
         if symbol.type == ID.name:
@@ -158,11 +167,20 @@ def yalex(file_path: str, dir_name: str, draw_subtrees: bool, draw_tree: bool, d
                 left = or_node
             else:
                 idCounter += 1
+
                 this_expression: Expression = Expression(symbol.original)
+
                 this_expression.hardProcess()
                 this_ast: AST = AST(this_expression.infixRegEx)
                 last = this_ast
-                last_symbol = symbol.original
+
+                # Check the symbol.original is a special case else name as tokena, tokenb, ...
+                if symbol.original in namingSpecialCases:
+                    last_symbol = namingSpecialCases[symbol.original]
+                else:
+                    # Using the specialNamingCounter to cast to abcd...z
+                    last_symbol = f'TOKEN{numberToLetter(specialNamingCounter)}'
+                    specialNamingCounter += 1
 
     if idCounter != returnCounter:
         print('✖ Rule definition failed')

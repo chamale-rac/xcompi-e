@@ -16,7 +16,7 @@ let rparen = ')'
 rule tokens = 
   ws        { WS }
   | id        { ID }               (* Cambie por una acción válida, que devuelva el token *)
-  | plus       { PLUS }
-  | times      { TIMES }
-  | lparen     { LPAREN }
-  | rparen      { RPAREN }
+  | '+'       { PLUS }
+  | '*'      { TIMES }
+  | '('     { LPAREN }
+  | ')'      { RPAREN }

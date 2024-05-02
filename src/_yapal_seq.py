@@ -164,6 +164,10 @@ class YapalSequencer(object):
             # Convert token to uppercase
             mayus_tokens.append(token.upper())
 
+        print(f"Defined tokens: {self.defined_tokens}")
+        print(f"Ignored tokens: {self.ignore_tokens}")
+        print(f"Tokens: {mayus_tokens}")
+
         for token in self.defined_tokens:
             if token not in self.ignore_tokens:
                 if token not in mayus_tokens:
