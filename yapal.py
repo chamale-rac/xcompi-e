@@ -55,6 +55,7 @@ def main():
     print('*'*80)
 
     grammar = Grammar(ypsq.get_defined_productions())
+    grammar.augment()
     print(grammar)
 
     print('*'*80)
@@ -71,6 +72,9 @@ def main():
         print(f"R{i}: {relation}")
 
     grammar.draw(C, relations, "LRAutomaton")
+
+    grammar.compute_first()
+    print(grammar.first_sets)
 
 
 if __name__ == "__main__":

@@ -6,7 +6,6 @@ class Grammar(object):
         self.productions = productions
         self.start_symbol = productions[0][0]
         self.nonterminals = {prod[0] for prod in productions}
-        self.augment()
         self.relations = []
 
     def augment(self) -> None:
@@ -151,3 +150,50 @@ class Grammar(object):
 
     def __str__(self) -> str:
         return "\n".join([str(production) for production in self.productions])
+
+    def compute_first(self):
+
+        self.first_sets = {symbol: set() for symbol in self.nonterminals}
+        # Initialize FIRST for terminals in each production
+        for head, production in self.productions:
+            for symbol in production:
+                if symbol not in self.nonterminals:  # Terminal found directly in production
+                    self.first_sets[head].add(symbol)
+                    break  # Stop at the first terminal since it determines the FIRST set directly
+
+        # Iteratively propagate FIRST sets based on non-terminals
+        changed = True
+        while changed:
+            changed = False
+            for head, production in self.productions:
+                first_len_before = len(self.first_sets[head])
+                i = 0
+                while i < len(production):
+                    symbol = production[i]
+                    if symbol in self.nonterminals:
+                        # Add non-ε symbols from FIRST(symbol) to FIRST(head)
+                        non_epsilon = self.first_sets[symbol] - {'ε'}
+                        self.first_sets[head].update(non_epsilon)
+                        if 'ε' not in self.first_sets[symbol]:
+                            break
+                    else:
+                        # First terminal encountered determines the FIRST set
+                        self.first_sets[head].add(symbol)
+                        break
+                    i += 1
+                else:
+                    # If all symbols can derive ε, add ε to FIRST(head)
+                    self.first_sets[head].add('ε')
+
+                # Check if set changed in size
+                if first_len_before != len(self.first_sets[head]):
+                    changed = True
+
+        for head, first_set in self.first_sets.items():
+            print(f"FIRST({head}) = {first_set}")
+
+    def follow(self, symbol):
+        pass
+
+    def first_and_follow(self):
+        pass
