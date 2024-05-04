@@ -147,6 +147,8 @@ class YapalSequencer(object):
         """
         This function returns the defined productions.
         """
+        if len(self.defined_productions) == 0:
+            return None
         return self.defined_productions
 
     def get_symbols(self):

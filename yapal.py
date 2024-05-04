@@ -68,6 +68,10 @@ def main():
     else:
         print("✖ Some non-terminals in productions are not defined in YAPAL")
 
+    if ypsq.get_defined_productions() == None:
+        print("✖ No productions defined in YAPAL")
+        return
+
     grammar = Grammar(ypsq.get_defined_productions())
 
     print("✔ Grammar has been created successfully")
