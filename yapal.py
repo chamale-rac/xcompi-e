@@ -22,59 +22,69 @@ def main():
     print(f"Syntax file: {args.yapl_file}")
     print(f"Input file: {args.input_file}")
 
-    print('*'*80)
+    print('-'*80)
+    print("YALEX")
+    print('-'*80)
+    # Remove if fails yalex
     # Execute the command below to run the lexical analyzer
     dir_dfa = yalex(args.yal_file, '.', False, False, False)
     tokens = dir_dfa.returnDict.keys()
 
-    print('*'*80)
+    print('-'*80)
 
     yapal_tokens = tokenizer.analyze(args.yapl_file, False)
 
     ypsq = yapal_seq(yapal_tokens)
 
-    print("YAPAL SEQUENCER")
+    print("YAPAL")
+
+    print('-'*80)
 
     print(f"Defined tokens: {ypsq.get_defined_tokens()}")
     print(f"Ignored tokens: {ypsq.get_ignored_tokens()}")
     print(f"Terminals: {ypsq.get_terminals()}")
     print(f"Non terminals: {ypsq.get_non_terminals()}")
-    print(f"Productions:")
 
-    print('-'*80)
-    # Compare the YALEX Tokenizer with the YAPAL Tokenizer
-
-    print("IMPORTANT!")
+    # Remove if fails yalex
     if ypsq.compare_tokens(tokens):
-        print("All the tokens used in YAPAL are defined in YALEX")
+        print("✔ All the tokens used in YAPAL are defined in YALEX")
 
     else:
-        print("Some tokens used in YAPAL are not defined in YALEX")
-    print("IMPORTANT!")
+        print("✖ Some tokens used in YAPAL are not defined in YALEX")
 
-    print('*'*80)
+    if ypsq.check_non_terminals_use():
+        print("✔ All non-terminals in productions are defined in YAPAL")
+    else:
+        print("✖ Some non-terminals in productions are not defined in YAPAL")
 
     grammar = Grammar(ypsq.get_defined_productions())
-    grammar.augment()
-    print(grammar)
 
-    print('*'*80)
+    print("✔ Grammar has been created successfully")
+
+    grammar.augment()
+
+    print("✔ Productions have been augmented successfully:")
+    print(grammar)
 
     C, relations = grammar.items(ypsq.get_symbols())
 
-    print("YAPAL")
-    print("ITEMS")
-    for i, item in enumerate(C):
-        print(f"I{i}: {item}")
+    print("✔ Items has been generated successfully:")
+    for i, items in enumerate(C):
+        print(f"\tI{i}:\n{grammar.items_to_str_print(items)}")
 
-    print("RELATIONS")
+    print("✔ Relations has been generated successfully:")
     for i, relation in enumerate(relations):
-        print(f"R{i}: {relation}")
+        print(f"\t[{i}] I{relation[0]} -> I{relation[1]} on {relation[2]}")
 
     grammar.draw(C, relations, "LRAutomaton")
 
     grammar.compute_first()
-    print(grammar.first_sets)
+    print("✔ First sets have been computed successfully:")
+    # Iterate over keys and values in dictionary
+    idx = 0
+    for key, value in grammar.first_sets.items():
+        print(f"\t[{idx}] {key}: {value}")
+        idx += 1
 
 
 if __name__ == "__main__":

@@ -88,6 +88,7 @@ class YapalSequencer(object):
         self.terminals = []
         self.non_terminals = []
         self.defined_productions = []
+        self.non_terminals_in_productions = []
 
         name = None
         has_name = False
@@ -106,6 +107,8 @@ class YapalSequencer(object):
                 this_production.append(production[1])
                 if production[0] == 'mayus':
                     self.terminals.append(production[1])
+                else:
+                    self.non_terminals_in_productions.append(production[1])
             elif has_name and production[0] == 'rpt':  # |
                 this_productions.append(this_production)
                 this_production = []
@@ -164,13 +167,21 @@ class YapalSequencer(object):
             # Convert token to uppercase
             mayus_tokens.append(token.upper())
 
-        print(f"Defined tokens: {self.defined_tokens}")
-        print(f"Ignored tokens: {self.ignore_tokens}")
-        print(f"Tokens: {mayus_tokens}")
+        print(f"Yalex tokens: {mayus_tokens}")
 
         for token in self.defined_tokens:
             if token not in self.ignore_tokens:
                 if token not in mayus_tokens:
                     return False
+
+        return True
+
+    def check_non_terminals_use(self):
+        '''
+        Check that all self.non_terminals_in_productions are in self.non_terminals
+        '''
+        for non_terminal in self.non_terminals_in_productions:
+            if non_terminal not in self.non_terminals:
+                return False
 
         return True

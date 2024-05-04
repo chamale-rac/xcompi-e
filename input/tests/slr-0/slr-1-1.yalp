@@ -9,19 +9,30 @@
 %token TIMES
 %token LPAREN RPAREN
 %token WS
+%token EPSILON
 IGNORE WS
 
 %%
 
 expression:
-    expression PLUS term
-  | term
+  terminal expressionism
 ;
-term:
-    term TIMES factor
-  | factor
+
+expressionism:
+  PLUS terminal expressionism
+  | EPSILON
 ;
-factor:
-    LPAREN expression RPAREN
+
+terminal:
+  factor terminalism
+;
+
+terminalism:
+  TIMES factor terminalism
+  | EPSILON
+;
+
+factor: 
+  LPAREN expression RPAREN
   | ID
 ;

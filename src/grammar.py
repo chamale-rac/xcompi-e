@@ -113,6 +113,19 @@ class Grammar(object):
 
         return C, relations
 
+    def items_to_str_print(self, items):
+        def item_to_str(item):
+            before_dot = ' '.join(item[1][:item[2]])
+            after_dot = ' '.join(item[1][item[2]:])
+            return f"\t\t{item[0]} → {before_dot} • {after_dot}"
+
+        kernel_items_str = '\n'.join(item_to_str(item)
+                                     for item in items if item[3])
+        non_kernel_items_str = '\n'.join(
+            item_to_str(item) for item in items if not item[3])
+
+        return f"\t  Kernel items: \n{kernel_items_str}\n\t  Non-kernel items: \n{non_kernel_items_str}"
+
     def items_to_str(self, items):
         def item_to_str(item):
             before_dot = ' '.join(item[1][:item[2]])
@@ -149,7 +162,10 @@ class Grammar(object):
             print(e)
 
     def __str__(self) -> str:
-        return "\n".join([str(production) for production in self.productions])
+        """
+        Converting each production to -> separated string and joining them with newline
+        """
+        return '\n'.join(f"\t[{idx}] {head} -> {' '.join(body)}" for idx, (head, body) in enumerate(self.productions))
 
     def compute_first(self):
 
@@ -188,9 +204,6 @@ class Grammar(object):
                 # Check if set changed in size
                 if first_len_before != len(self.first_sets[head]):
                     changed = True
-
-        for head, first_set in self.first_sets.items():
-            print(f"FIRST({head}) = {first_set}")
 
     def follow(self, symbol):
         pass
