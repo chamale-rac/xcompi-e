@@ -10,8 +10,6 @@ class YapalSequencer(object):
     def __init__(self, tokens) -> None:
         self.tokens = tokens
 
-        self.sequence()
-
     def sequence(self):
         """
         This function processes the tokens and extracts terminals, nonterminals, and productions.
@@ -20,6 +18,10 @@ class YapalSequencer(object):
             self.removeAnyCm()
             self.extractDefinitions()
             self.extractProductions()
+
+            return True
+        else:
+            return False
 
     def splitBySpt(self):
         try:

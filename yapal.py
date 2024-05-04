@@ -33,8 +33,19 @@ def main():
     print('-'*80)
 
     yapal_tokens = tokenizer.analyze(args.yapl_file, False)
+    if yapal_tokens == None:
+        print("✖ No tokens defined in YAPAL")
+        return
+    elif len(yapal_tokens) == 0:
+        print("✖ No tokens defined in YAPAL")
+        return
 
     ypsq = yapal_seq(yapal_tokens)
+    if ypsq.sequence():
+        print("✔ Tokens have been sequenced successfully")
+    else:
+        print("✖ Tokens could not be sequenced, missing '%%' token")
+        return
 
     print("YAPAL")
 

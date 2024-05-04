@@ -205,8 +205,5 @@ class Grammar(object):
                 if first_len_before != len(self.first_sets[head]):
                     changed = True
 
-    def follow(self, symbol):
-        pass
-
-    def first_and_follow(self):
+    def compute_follow(self):
         pass
