@@ -37,6 +37,7 @@ class Grammar(object):
                             # For each production B -> γ, add B -> .γ to the closure if not already present
                             new_item = (B, production[1], 0)
                             if new_item not in closure_set:
+                                # And is not empty
                                 new_items.add(new_item)
 
                     if dot_position > 0:
@@ -54,7 +55,8 @@ class Grammar(object):
         # To all the non_kernel_items add the 4th parameter as False
         for item in non_kernel_items:
             head, body, dot_position = item
-            closure_set.add((head, body, dot_position, False))
+            if body != ():  # Removing the empty ones
+                closure_set.add((head, body, dot_position, False))
 
         # To all the kernel_items add the 4th parameter as True
         for item in kernel_items:

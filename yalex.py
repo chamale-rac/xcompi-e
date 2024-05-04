@@ -133,6 +133,7 @@ def yalex(file_path: str, dir_name: str, draw_subtrees: bool, draw_tree: bool, d
         "'('": 'LPAREN',
         "')'": 'RPAREN',
         "'-'": 'MINUS',
+        "'/'": 'DIV'
     }
 
     returnDict = {}
