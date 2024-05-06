@@ -16,3 +16,23 @@ IGNORE WS
 
 expression:
   terminal expressionism
+;
+
+expressionism:
+  PLUS terminal expressionism
+  | EPSILON
+;
+
+terminal:
+  factor terminalism
+;
+
+terminalism:
+  TIMES factor terminalism
+  | EPSILON
+;
+
+factor: 
+  LPAREN expression RPAREN
+  | ID
+;
